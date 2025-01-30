@@ -1,17 +1,27 @@
-import pygame
 # initiating pygame modules
+import pygame
+
 pygame.init()
 
-# assigning screen height and width (800 by 600 during development)
+# creating game window
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
-# setting screen height and width
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Main Menu")
 
-# loop for running the game
+# game loop
 run = True
-
 while run:
 
-    pygame.draw.rect(screen, (255,0,0), player)
+    screen.fill((0, 51, 102))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+
+    pygame.display.update()
+pygame.quit()
+
+
+
