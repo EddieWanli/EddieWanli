@@ -1,26 +1,34 @@
-# initiating pygame modules
+# initialize pygame modules
 import pygame
-
 pygame.init()
 
-# creating game window
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+# create game window
+width = 1000
+height = 750
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Terraworld")
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Main Menu")
+# main menu control
+main_menu = False
+
+# time controls
+fps = 60
+timer = pygame.time.Clock()
+
+# font
+font = pygame.font.SysFont("freesansbold.ttf", 30)
 
 # game loop
 run = True
 while run:
-
-    screen.fill((0, 51, 102))
+    screen.fill("light blue")
+    timer.tick(fps)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-    pygame.display.update()
+    pygame.display.flip()
 pygame.quit()
 
 
