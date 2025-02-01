@@ -1,7 +1,9 @@
 # initialize pygame modules
 import pygame
+from button import Button
 pygame.init()
 
+ 
 # create game window
 width = 1000
 height = 750
@@ -17,6 +19,10 @@ timer = pygame.time.Clock()
 
 # font
 font = pygame.font.SysFont("freesansbold.ttf", 30)
+
+def draw_game():
+    button = Button("Main menu", 370, 450, 230, 450)
+    button.draw()
 
 # game loop
 run = True
