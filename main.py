@@ -18,6 +18,8 @@ font2 = pygame.font.Font(None, 35)
 title_text = font.render("TERRAWORLD", True, "black")
 title_text_rect = title_text.get_rect(midbottom=(500, 100))
 back_to_menu = font2.render("Esc - Main Menu", True, "black")
+author = font2.render("By Eddie Wanli", True, "black")
+author_pos = author.get_rect(center=(900, 725))
 
 # default game state
 game_state = "menu"
@@ -57,6 +59,7 @@ while True:
     if game_state == "menu":
         screen.fill("light blue")
         screen.blit( title_text , title_text_rect)
+        screen.blit(author, author_pos )
         new_game_button.draw()
         settings_button.draw()
         progress_button.draw()
