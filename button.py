@@ -22,13 +22,13 @@ class Button:
 
     def check_hover(self):
         mouse_pos = pygame.mouse.get_pos()
-        button_rect = pygame.Rect((self.x, self.y), (175,35))
+        button_rect = pygame.Rect((self.x, self.y), (200,50))
         return button_rect.collidepoint(mouse_pos)
 
     def check_clicked(self):
         mouse_pos = pygame.mouse.get_pos()
         left_click = pygame.mouse.get_pressed()[0]
-        button_rect = pygame.Rect((self.x, self.y), (175, 35))
+        button_rect = pygame.Rect((self.x, self.y), (200, 50))
         if left_click and button_rect.collidepoint(mouse_pos):
             return True
         else:
