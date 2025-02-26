@@ -13,13 +13,18 @@ fps = 60
 timer = pygame.time.Clock()
 
 # game text
-font = pygame.font.Font("retro.ttf", 50)
+font = pygame.font.Font("images/retro.ttf", 50)
 font2 = pygame.font.Font(None, 35)
 title_text = font.render("TERRAWORLD", True, "black")
 title_text_rect = title_text.get_rect(midbottom=(500, 100))
 back_to_menu = font2.render("Esc - Main Menu", True, "black")
 author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
+
+#assets
+grass = pygame.image.load("images/e.jpg")
+sun = pygame.image.load("images/eyes.png")
+cloud = pygame.image.load("images/cloud.png")
 
 # default game state
 game_state = "menu"
@@ -66,7 +71,20 @@ while True:
         exit_button.draw()
 
     elif game_state == "game":
-        screen.fill("green")
+        screen.fill("light blue")
+        new_grass = pygame.transform.scale(grass, (50,50), )
+        new_sun = pygame.transform.scale(sun, (200, 200), )
+        new_cloud = pygame.transform.scale(cloud, (200,200), )
+        screen.blit(new_grass, (0, 500))
+        screen.blit(new_sun, (700,25))
+        screen.blit(new_cloud, (60, 40))
+        screen.blit(new_cloud, (200,75))
+        screen.blit(new_cloud, (290, 5))
+        screen.blit(new_cloud, (400, 50))
+
+
+
+
         # add gameplay code here
 
     elif game_state == "settings":
