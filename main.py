@@ -1,6 +1,7 @@
 # initialize useful modules
 import sys
 import pygame
+from terrain import gen_world
 from button import Button
 pygame.init()
 
@@ -25,6 +26,15 @@ author_pos = author.get_rect(center=(900, 725))
 grass = pygame.image.load("images/e.jpg")
 sun = pygame.image.load("images/eyes.png")
 cloud = pygame.image.load("images/cloud.png")
+new_grass = pygame.transform.scale(grass, (50,50), )
+player_idle = pygame.image.load("images/player Idle.png")
+player_x = 500
+player_y = 500
+pressed_right = False
+pressed_left = False
+pressed_up = False
+pressed_down = False
+pressed_shift = False
 
 # default game state
 game_state = "menu"
@@ -42,12 +52,33 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                if game_state == "settings" or game_state == "progress":
-                    game_state = "menu"
-                elif game_state == "menu":
-                    pygame.quit()
-                    sys.exit()
+                if event.key == pygame.K_ESCAPE:
+                    if game_state == "settings" or game_state == "progress":
+                        game_state = "menu"
+                    elif game_state == "menu":
+                        pygame.quit()
+                        sys.exit()
+                if game_state == "game":
+
+                    if event.key == pygame.K_d:
+                        pressed_right = True
+                    elif event.key == pygame.K_a:
+                        pressed_left = True
+                    elif event.key == pygame.K_w:
+                        pressed_up = True
+                    elif event.key == pygame.K_s:
+                        pressed_down = True
+        if event.type == pygame.KEYUP:
+            if game_state == "game":
+                if event.key == pygame.K_d:
+                    pressed_right = False
+                if event.key == pygame.K_a:
+                    pressed_left = False
+                if event.key == pygame.K_w:
+                    pressed_up = False
+                if event.key == pygame.K_s:
+                    pressed_down = False
+
         # button click checks
         if game_state == "menu":
             if new_game_button.check_clicked():
@@ -71,8 +102,8 @@ while True:
         exit_button.draw()
 
     elif game_state == "game":
+        #background
         screen.fill("light blue")
-        new_grass = pygame.transform.scale(grass, (50,50), )
         new_sun = pygame.transform.scale(sun, (200, 200), )
         new_cloud = pygame.transform.scale(cloud, (200,200), )
         screen.blit(new_grass, (0, 500))
@@ -81,6 +112,20 @@ while True:
         screen.blit(new_cloud, (200,75))
         screen.blit(new_cloud, (290, 5))
         screen.blit(new_cloud, (400, 50))
+
+        if pressed_left:
+            player_x -= 1
+        if pressed_right:
+            player_x += 1
+        if pressed_up:
+            player_y -= 1
+        if pressed_down:
+            player_y += 1
+
+        screen.blit(player_idle, (player_x,player_y))
+
+        #gen_world(screen)
+
 
 
 
