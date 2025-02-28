@@ -23,8 +23,8 @@ author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
 
 #assets
-grass = pygame.image.load("images/e.jpg")
-sun = pygame.image.load("images/eyes.png")
+grass = pygame.image.load("images/grass 1.png.")
+sun = pygame.image.load("images/sun.png")
 cloud = pygame.image.load("images/cloud.png")
 new_grass = pygame.transform.scale(grass, (50,50), )
 player_idle = pygame.image.load("images/player Idle.png")
@@ -35,6 +35,7 @@ pressed_left = False
 pressed_up = False
 pressed_down = False
 pressed_shift = False
+pressed_jump = False
 
 # default game state
 game_state = "menu"
@@ -44,6 +45,8 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
+
+map = gen_world()
 
 # game loop
 while True:
@@ -68,6 +71,8 @@ while True:
                         pressed_up = True
                     elif event.key == pygame.K_s:
                         pressed_down = True
+                    elif event.key == pygame.K_LSHIFT:
+                        pressed_shift = True
         if event.type == pygame.KEYUP:
             if game_state == "game":
                 if event.key == pygame.K_d:
@@ -78,6 +83,8 @@ while True:
                     pressed_up = False
                 if event.key == pygame.K_s:
                     pressed_down = False
+                if event.key == pygame.K_LSHIFT:
+                    pressed_shift = False
 
         # button click checks
         if game_state == "menu":
@@ -104,6 +111,9 @@ while True:
     elif game_state == "game":
         #background
         screen.fill("light blue")
+        for i in map:
+            rect = new_grass.get_rect(topleft=(i[0], i[1]))
+            screen.blit(new_grass, rect)
         new_sun = pygame.transform.scale(sun, (200, 200), )
         new_cloud = pygame.transform.scale(cloud, (200,200), )
         screen.blit(new_grass, (0, 500))
@@ -113,6 +123,7 @@ while True:
         screen.blit(new_cloud, (290, 5))
         screen.blit(new_cloud, (400, 50))
 
+
         if pressed_left:
             player_x -= 1
         if pressed_right:
@@ -121,16 +132,15 @@ while True:
             player_y -= 1
         if pressed_down:
             player_y += 1
-
-        screen.blit(player_idle, (player_x,player_y))
-
-        #gen_world(screen)
-
-
-
+        if pressed_shift:
+            if pressed_right:
+                player_x += 1.5
+            if pressed_left:
+                player_x -= 1.5
 
 
-        # add gameplay code here
+        screen.blit(player_idle, (player_x, player_y))
+
 
     elif game_state == "settings":
         screen.fill("dark grey")
