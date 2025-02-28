@@ -22,14 +22,39 @@ back_to_menu = font2.render("Esc - Main Menu", True, "black")
 author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
 
-#assets
+#world assets
 grass = pygame.image.load("images/grass 1.png.")
 sun = pygame.image.load("images/sun.png")
 cloud = pygame.image.load("images/cloud.png")
-new_grass = pygame.transform.scale(grass, (50,50), )
 player_idle = pygame.image.load("images/player Idle.png")
-player_x = 500
-player_y = 500
+
+#player assets
+run1 = pygame.image.load("images/run 1.png")
+run2 = pygame.image.load("images/run 2.png")
+run3 = pygame.image.load("images/run 3.png")
+run4 = pygame.image.load("images/run 4.png")
+run5 = pygame.image.load("images/run 5.png")
+run6 = pygame.image.load("images/run 6.png")
+run7 = pygame.image.load("images/run 7.png")
+
+#transformed world assets
+new_grass = pygame.transform.scale(grass, (50,50), )
+new_sun = pygame.transform.scale(sun, (200, 200), )
+new_cloud = pygame.transform.scale(cloud, (200,200), )
+new_player_idle = pygame.transform.scale(player_idle, (70,100))
+new_run1 = pygame.transform.scale(run1, (70,100), )
+new_run2 = pygame.transform.scale(run2, (70,100), )
+new_run3 = pygame.transform.scale(run3, (70,100), )
+new_run4 = pygame.transform.scale(run4, (70,100), )
+new_run5 = pygame.transform.scale(run5, (70,100), )
+new_run6 = pygame.transform.scale(run6, (70,100), )
+new_run7 = pygame.transform.scale(run7, (70,100), )
+run_ani = [new_run1, new_run2, new_run3, new_run4, new_run5, new_run6, new_run7]
+
+#movement variables
+player_x = 0
+player_y = 510
+player_sprite = new_player_idle
 pressed_right = False
 pressed_left = False
 pressed_up = False
@@ -73,6 +98,8 @@ while True:
                         pressed_down = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
+                        player_sprite = new_run1
+
         if event.type == pygame.KEYUP:
             if game_state == "game":
                 if event.key == pygame.K_d:
@@ -85,6 +112,7 @@ while True:
                     pressed_down = False
                 if event.key == pygame.K_LSHIFT:
                     pressed_shift = False
+                    player_sprite = new_player_idle
 
         # button click checks
         if game_state == "menu":
@@ -114,9 +142,6 @@ while True:
         for i in map:
             rect = new_grass.get_rect(topleft=(i[0], i[1]))
             screen.blit(new_grass, rect)
-        new_sun = pygame.transform.scale(sun, (200, 200), )
-        new_cloud = pygame.transform.scale(cloud, (200,200), )
-        screen.blit(new_grass, (0, 500))
         screen.blit(new_sun, (700,25))
         screen.blit(new_cloud, (60, 40))
         screen.blit(new_cloud, (200,75))
@@ -125,22 +150,20 @@ while True:
 
 
         if pressed_left:
-            player_x -= 1
+            player_x -= 1.3
         if pressed_right:
-            player_x += 1
+            player_x += 1.3
         if pressed_up:
-            player_y -= 1
+            player_y -= 1.3
         if pressed_down:
-            player_y += 1
+            player_y += 1.3
         if pressed_shift:
             if pressed_right:
-                player_x += 1.5
+                player_x += 2
             if pressed_left:
-                player_x -= 1.5
+                player_x -= 2
 
-
-        screen.blit(player_idle, (player_x, player_y))
-
+        screen.blit(player_sprite, (player_x, player_y))
 
     elif game_state == "settings":
         screen.fill("dark grey")
