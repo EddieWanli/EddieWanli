@@ -23,9 +23,10 @@ author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
 
 #world assets
-grass = pygame.image.load("images/grass 1.png.")
-sun = pygame.image.load("images/sun.png")
-cloud = pygame.image.load("images/cloud.png")
+grass = pygame.image.load("images/grass.jpg.")
+dirt = pygame.image.load("images/dirt.jpeg.")
+sun = pygame.image.load("images/sun 2.webp")
+cloud = pygame.image.load("images/cloud 2.webp")
 player_idle = pygame.image.load("images/player Idle.png")
 
 #player assets
@@ -39,6 +40,7 @@ run7 = pygame.image.load("images/run 7.png")
 
 #transformed world assets
 new_grass = pygame.transform.scale(grass, (50,50), )
+new_dirt = pygame.transform.scale(dirt, (50,50), )
 new_sun = pygame.transform.scale(sun, (200, 200), )
 new_cloud = pygame.transform.scale(cloud, (200,200), )
 new_player_idle = pygame.transform.scale(player_idle, (70,100))
@@ -53,8 +55,9 @@ run_ani = [new_run1, new_run2, new_run3, new_run4, new_run5, new_run6, new_run7]
 
 #movement variables
 player_x = 0
-player_y = 510
+player_y = 500
 player_sprite = new_player_idle
+player_rect = pygame.Rect(player_x, player_y, player_sprite.get_width(), player_sprite.get_height())
 pressed_right = False
 pressed_left = False
 pressed_up = False
@@ -71,7 +74,10 @@ progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
-map = gen_world()
+map = gen_world(600)
+map2 = gen_world(650)
+map3 = gen_world(700)
+
 
 # game loop
 while True:
@@ -140,8 +146,14 @@ while True:
         #background
         screen.fill("light blue")
         for i in map:
-            rect = new_grass.get_rect(topleft=(i[0], i[1]))
-            screen.blit(new_grass, rect)
+            grass_rect = new_grass.get_rect(topleft=(i[0], i[1]))
+            screen.blit(new_grass, grass_rect)
+        for i in map2:
+            dirt_rect = new_dirt.get_rect(topleft=(i[0], i[1]))
+            screen.blit(new_dirt, dirt_rect)
+        for i in map3:
+            dirt_rect = new_dirt.get_rect(topleft=(i[0], i[1]))
+            screen.blit(new_dirt, dirt_rect)
         screen.blit(new_sun, (700,25))
         screen.blit(new_cloud, (60, 40))
         screen.blit(new_cloud, (200,75))
@@ -150,18 +162,18 @@ while True:
 
 
         if pressed_left:
-            player_x -= 1.3
+            player_x -= 1.5
         if pressed_right:
-            player_x += 1.3
+            player_x += 1.5
         if pressed_up:
-            player_y -= 1.3
+            player_y -= 1.5
         if pressed_down:
-            player_y += 1.3
+            player_y += 1.5
         if pressed_shift:
             if pressed_right:
-                player_x += 2
+                player_x += 2.5
             if pressed_left:
-                player_x -= 2
+                player_x -= 2.5
 
         screen.blit(player_sprite, (player_x, player_y))
 
