@@ -1,5 +1,10 @@
 import pygame
 import random
+tile_size = 50
+grass = pygame.image.load("images/grass.jpg.")
+new_grass = pygame.transform.scale(grass, (50,50))
+dirt = pygame.image.load("images/dirt.jpeg.")
+new_dirt = pygame.transform.scale(dirt, (50,50))
 
 tilemap = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -11,31 +16,21 @@ tilemap = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-           [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
-           [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-           [1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],
-           [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2],
-           [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2]]
+           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+           [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+           [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1],
+           [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2],
+           [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2]]
 
-def gen_tiles():
-    tiles = []
-    for row in tilemap:
-        for tile in row:
+def gen_tiles(screen, map):
+    for i, row in enumerate(map):
+        for j, tile in enumerate(row):
+            x = j * tile_size
+            y = i * tile_size
             if tile == 1:
-                tile_x = row[tile]
-                tile_y = tilemap[row]
-                tile
-                tile = "grass"
-                tiles.append(tile)
-
-                tile_y = tilemap[0]
+                screen.blit(new_grass, (x,y))
             elif tile == 2:
-                tile = "dirt"
-                tiles.append(tile)
-            elif tile == 0:
-                tile = "air"
-                tiles.append(tile)
-    return tiles
+                screen.blit(new_dirt, (x,y))
 
 
 

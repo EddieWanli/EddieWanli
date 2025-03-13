@@ -2,6 +2,7 @@
 import sys
 import pygame
 from terrain import gen_tiles
+from terrain import tilemap
 from button import Button
 pygame.init()
 
@@ -74,7 +75,6 @@ progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
-game_map = gen_tiles()
 
 # game loop
 while True:
@@ -147,6 +147,7 @@ while True:
         screen.blit(new_cloud, (200,75))
         screen.blit(new_cloud, (290, 5))
         screen.blit(new_cloud, (400, 50))
+        gen_tiles(screen,tilemap)
 
         #player movement
         if pressed_left:
@@ -164,12 +165,6 @@ while True:
                 player_x -= 2.5
 
         screen.blit(player_sprite, (player_x, player_y))
-
-        #loop to blit map onto screen
-
-
-
-
 
     elif game_state == "settings":
         screen.fill("dark grey")
