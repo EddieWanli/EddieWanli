@@ -26,8 +26,8 @@ tilemap = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
            [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2]]
 
 #tile generator
-def gen_tiles(screen, map):
-    for i, row in enumerate(map):
+def gen_tiles(screen, tile_map):
+    for i, row in enumerate(tile_map):
         for j, tile in enumerate(row):
             x = j * tile_size
             y = i * tile_size
