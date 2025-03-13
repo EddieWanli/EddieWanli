@@ -1,7 +1,7 @@
 # initialize useful modules
 import sys
 import pygame
-from terrain import gen_world
+from terrain import gen_tiles
 from button import Button
 pygame.init()
 
@@ -74,10 +74,7 @@ progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
-map = gen_world(600)
-map2 = gen_world(650)
-map3 = gen_world(700)
-
+game_map = gen_tiles()
 
 # game loop
 while True:
@@ -145,22 +142,13 @@ while True:
     elif game_state == "game":
         #background
         screen.fill("light blue")
-        for i in map:
-            grass_rect = new_grass.get_rect(topleft=(i[0], i[1]))
-            screen.blit(new_grass, grass_rect)
-        for i in map2:
-            dirt_rect = new_dirt.get_rect(topleft=(i[0], i[1]))
-            screen.blit(new_dirt, dirt_rect)
-        for i in map3:
-            dirt_rect = new_dirt.get_rect(topleft=(i[0], i[1]))
-            screen.blit(new_dirt, dirt_rect)
         screen.blit(new_sun, (700,25))
         screen.blit(new_cloud, (60, 40))
         screen.blit(new_cloud, (200,75))
         screen.blit(new_cloud, (290, 5))
         screen.blit(new_cloud, (400, 50))
 
-
+        #player movement
         if pressed_left:
             player_x -= 1.5
         if pressed_right:
@@ -176,6 +164,12 @@ while True:
                 player_x -= 2.5
 
         screen.blit(player_sprite, (player_x, player_y))
+
+        #loop to blit map onto screen
+
+
+
+
 
     elif game_state == "settings":
         screen.fill("dark grey")
