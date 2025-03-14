@@ -1,47 +1,60 @@
-import pygame, random, noise
-t_map=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-       [0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0],
-       [1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1],
-       [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2],
-       [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2],
-       [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2],]
+import pygame, random
+# tile size variable
+tile_size = 50
 
+# tile assets
 grass = pygame.image.load("images/grass.jpg.")
-new_grass = pygame.transform.scale(grass, (50,50),)
+new_grass = pygame.transform.scale(grass, (50,50))
 dirt = pygame.image.load("images/dirt.jpeg.")
-new_dirt = pygame.transform.scale(dirt, (50,50), )
-air = pygame.image.load("images/air.jpg")
-new_air = pygame.transform.scale(air, (50,50), )
+new_dirt = pygame.transform.scale(dirt, (50,50))
 
-tile_types = {0:air,1:new_grass,2:new_dirt}
+# tile map
+tilemap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1],
+           [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2],
+           [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2]]
 
-def generate_chunk(x,y):
-    chunk_data = []
-    for y_pos in range(10):
-        for x_pos in range(10):
-            target_x = x * 10 + x_pos
-            target_y = y * 10 + y_pos
-            tile_type = 0 # nothing
-            height = int(noise.pnoise1(target_x * 0.1, repeat=9999999) * 5)
-            if target_y > 8 - height:
-                tile_type = 2 # dirt
-            elif target_y == 8 - height:
-                tile_type = 1 # grass
-            elif target_y == 8 - height - 1:
-                if random.randint(1,5) == 1:
-                    tile_type = 3 # plant
-            if tile_type != 0:
-                chunk_data.append([[target_x,target_y],tile_type])
-    return chunk_data
+# tile placement
+def tile_placer(tile_map):
+    for i, row in enumerate(tile_map):
+        for j in range(len(row)):
+            # Assign a random tile based on the row index i
+            if i > 11 and i < 14:
+                if tile_map[i+1][j] == 0:
+                    tile_map[i][j] = 0
+                elif tilemap[i-1]:
+                    tile_map[i][j] = random.randint(0, 2)
+            elif i > 13:
+                tile_map[i][j] = 2
+
+            else:
+                # Set tiles to 0 for rows at index 5 or less
+                tile_map[i][j] = 0
+    return tile_map
+
+
+
+# tile generator
+def gen_tiles(screen, tile_map):
+    for i, row in enumerate(tile_map):
+        for j, tile in enumerate(row):
+            x = j * tile_size
+            y = i * tile_size
+            if tile == 1:
+                screen.blit(new_grass, (x,y))
+            elif tile == 2:
+                screen.blit(new_dirt, (x,y))
 
 
 

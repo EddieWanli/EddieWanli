@@ -1,8 +1,9 @@
 # initialize useful modules
 import sys
 import pygame
+from terrain import gen_tiles
+from terrain import tilemap, tile_placer
 from button import Button
-from terrain import gen_tilemap
 pygame.init()
 
 # create game window
@@ -27,6 +28,7 @@ grass = pygame.image.load("images/grass.jpg.")
 dirt = pygame.image.load("images/dirt.jpeg.")
 sun = pygame.image.load("images/sun 2.webp")
 cloud = pygame.image.load("images/cloud 2.webp")
+background = pygame.image.load("images/mario background.webp")
 player_idle = pygame.image.load("images/player Idle.png")
 
 #player assets
@@ -43,6 +45,7 @@ new_grass = pygame.transform.scale(grass, (50,50), )
 new_dirt = pygame.transform.scale(dirt, (50,50), )
 new_sun = pygame.transform.scale(sun, (200, 200), )
 new_cloud = pygame.transform.scale(cloud, (200,200), )
+new_background = pygame.transform.scale(background, (1000,750), )
 new_player_idle = pygame.transform.scale(player_idle, (70,100))
 new_run1 = pygame.transform.scale(run1, (70,100), )
 new_run2 = pygame.transform.scale(run2, (70,100), )
@@ -73,6 +76,8 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
+
+map2use = tile_placer(tilemap)
 
 # game loop
 while True:
@@ -138,29 +143,31 @@ while True:
         exit_button.draw()
 
     elif game_state == "game":
-        #background
-        screen.fill("light blue")
+        # background
+        screen.blit(new_background, (0,0))
         screen.blit(new_sun, (700,25))
         screen.blit(new_cloud, (60, 40))
         screen.blit(new_cloud, (200,75))
         screen.blit(new_cloud, (290, 5))
         screen.blit(new_cloud, (400, 50))
-        gen_tilemap(screen)
+        gen_tiles(screen, map2use)
 
-
+        # player movement
         if pressed_left:
-            player_x -= 1.5
+            player_x -= 2
         if pressed_right:
-            player_x += 1.5
+            player_x += 2
         if pressed_up:
-            player_y -= 1.5
+            player_y -= 2
         if pressed_down:
-            player_y += 1.5
+            player_y += 2
         if pressed_shift:
             if pressed_right:
-                player_x += 2.5
+                player_x += 3.5
             if pressed_left:
-                player_x -= 2.5
+                player_x -= 3.5
+        if player_x < 0:
+            player_x = 0
 
         screen.blit(player_sprite, (player_x, player_y))
 
