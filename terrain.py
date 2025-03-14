@@ -1,7 +1,7 @@
 import pygame, random
 # tile size variable
 tile_size = 50
-
+tiles = [1,2]
 # tile assets
 grass = pygame.image.load("images/grass.jpg.")
 new_grass = pygame.transform.scale(grass, (50,50))
@@ -71,6 +71,7 @@ def gen_tiles(screen, tile_map):
                 screen.blit(new_grass, (x,y))
             elif tile == 2:
                 screen.blit(new_dirt, (x,y))
+
 
 
 
