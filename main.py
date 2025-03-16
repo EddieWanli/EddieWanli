@@ -145,11 +145,7 @@ while True:
     elif game_state == "game":
         # background
         screen.blit(new_background, (0,0))
-        screen.blit(new_sun, (700,25))
-        screen.blit(new_cloud, (60, 40))
-        screen.blit(new_cloud, (200,75))
-        screen.blit(new_cloud, (290, 5))
-        screen.blit(new_cloud, (400, 50))
+        screen.blit(new_sun, (695,25))
         gen_tiles(screen, map2use)
 
         # player movement

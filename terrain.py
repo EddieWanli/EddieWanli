@@ -27,33 +27,34 @@ tilemap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#1
 
 # tile placement
 def tile_placer(tile_map):
-    rows = len(tile_map)
-    columns = len(tile_map[0])
+    rows = 15
+    columns = 20
     for i in range(rows):
         for j in range(columns):
 
-            if i >= 11 and i < 14:
-                if tile_map[i + 1][j] == 0: # checks if tile below current tile is air
+            if i + 1 < rows:
+                if i >= 11 and i < 14:
+                    if tile_map[i + 1][j] == 0:
 
-                    tile_map[i][j] = 1  # places grass or dirt
-
-                elif tile_map[i - 1][j] == 0: #checks if tile above current tile is air
-
-                    tile_map[i][j] = random.randint(0, 1)  # could be water or dirt
-
-                elif tile_map[i - 1][j] == 0:
-                    if i >= 14:
-                        tile_map[i][j] = 2
-                    else:
                         tile_map[i][j] = 1
-                else:
-                    tile_map[i][j] = 2  # grass or dirt
+
+                    elif tile_map[i - 1][j] == 0:
+
+                        tile_map[i][j] = random.randint(0, 1)
+
+                    elif tile_map[i - 1][j] == 0:
+                        if i >= 14:
+                            tile_map[i][j] = 2
+                        else:
+                            tile_map[i][j] = 1
+                    else:
+                        tile_map[i][j] = 2
 
             # ensures no air below grass or dirt
-            if tile_map[i][j] in [1, 2]:  # if tile is grass or dirt
+            if tile_map[i][j] in [1, 2]:
 
                 if i + 1 < rows and tile_map[i + 1][j] == 0:
-                    tile_map[i + 1][j] = tile_map[i][j]  # copy grass or dirt below
+                    tile_map[i + 1][j] = tile_map[i][j]
 
             if tile_map[i][j] == 0:
                 if i + 1 < rows and tile_map[i + 1][j] == 2:
