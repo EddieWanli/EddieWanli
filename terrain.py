@@ -4,9 +4,9 @@ tile_size = 50
 tiles = [1,2]
 # tile assets
 grass = pygame.image.load("images/grass.jpg.")
-new_grass = pygame.transform.scale(grass, (50,50))
+new_grass = pygame.transform.scale(grass, (tile_size,tile_size))
 dirt = pygame.image.load("images/dirt.jpeg.")
-new_dirt = pygame.transform.scale(dirt, (50,50))
+new_dirt = pygame.transform.scale(dirt, (tile_size,tile_size))
 
 # tile map
 tilemap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#1
@@ -25,6 +25,8 @@ tilemap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#1
            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],#14
            [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]#15
 
+scroll = [0,0]
+
 # tile placement
 def tile_placer(tile_map):
     rows = 15
@@ -33,12 +35,8 @@ def tile_placer(tile_map):
         for j in range(columns):
 
             if i + 1 < rows:
-                if i >= 11 and i < 14:
-                    if tile_map[i + 1][j] == 0:
-
-                        tile_map[i][j] = 1
-
-                    elif tile_map[i - 1][j] == 0:
+                if i in range(12,14):
+                    if tile_map[i - 1][j] == 0:
 
                         tile_map[i][j] = random.randint(0, 1)
 
@@ -69,9 +67,9 @@ def gen_tiles(screen, tile_map):
             x = j * tile_size
             y = i * tile_size
             if tile == 1:
-                screen.blit(new_grass, (x,y))
+                screen.blit(new_grass, (x - scroll[0],y - scroll[1]))
             elif tile == 2:
-                screen.blit(new_dirt, (x,y))
+                screen.blit(new_dirt, (x - scroll[0],y - scroll[1]))
 
 
 

@@ -2,7 +2,7 @@
 import sys
 import pygame
 from terrain import gen_tiles
-from terrain import tilemap, tile_placer
+from terrain import tilemap, tile_placer, scroll
 from button import Button
 pygame.init()
 
@@ -81,6 +81,8 @@ map2use = tile_placer(tilemap)
 
 # game loop
 while True:
+    scroll[0] += (player_x - scroll[0] - 500)/10
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -165,7 +167,7 @@ while True:
         if player_x < 0:
             player_x = 0
 
-        screen.blit(player_sprite, (player_x, player_y))
+        screen.blit(player_sprite, (player_x - scroll[0], player_y - scroll[1]))
 
     elif game_state == "settings":
         screen.fill("dark grey")
