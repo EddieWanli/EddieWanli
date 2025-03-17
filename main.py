@@ -1,8 +1,7 @@
 # initialize useful modules
 import sys
 import pygame
-from terrain import gen_tiles
-from terrain import tilemap, tile_placer, scroll, chunk_gen
+from terrain import tilemap, tile_placer, scroll, chunk_gen, gen_tile_map, gen_tiles
 from button import Button
 pygame.init()
 
@@ -77,9 +76,8 @@ progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
-map2use = tile_placer(tilemap)
-chunk_test = chunk_gen(2)
-mapuse = tile_placer(chunk_test)
+
+worldchunk = chunk_gen(2)
 
 # game loop
 while True:
@@ -150,7 +148,7 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        gen_tiles(screen, mapuse)
+        gen_tiles(screen, worldmap, 3)
 
         # player movement
         if pressed_left:
