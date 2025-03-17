@@ -67,11 +67,35 @@ def gen_tiles(screen, tile_map):
             x = j * tile_size
             y = i * tile_size
             if tile == 1:
-                screen.blit(new_grass, (x - scroll[0],y - scroll[1]))
+                screen.blit(new_grass, (x - scroll[0] ,y - scroll[1]))
             elif tile == 2:
                 screen.blit(new_dirt, (x - scroll[0],y - scroll[1]))
 
+# tile map generator
+def gen_tile_map(num):
+    tile_map = []
+    chunk = []
+    rows = 15
+    columns = 20
+    for i in range(rows):
+        chunk.append([])
+        for j in range(columns):
+            if i >= 14:
+                chunk[i].append(2)
+            elif i == 13:
+                chunk[i].append(1)
+            else:
+                chunk[i].append(0)
+    for i in range(num):
+        tile_map.append(chunk)
+    return tile_map
 
+def chunk_gen(num):
+    chunk_list = []
+    chunk = gen_tile_map(num)
+    for i in chunk:
+        chunk_list.append(i)
+    return chunk_list
 
 
 
