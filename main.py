@@ -14,7 +14,7 @@ fps = 60
 timer = pygame.time.Clock()
 
 # game text
-font = pygame.font.Font("images/retro.ttf", 50)
+font = pygame.font.Font("assets/retro.ttf", 50)
 font2 = pygame.font.Font(None, 35)
 title_text = font.render("TERRAWORLD", True, "black")
 title_text_rect = title_text.get_rect(midbottom=(500, 100))
@@ -23,21 +23,21 @@ author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
 
 #world assets
-grass = pygame.image.load("images/grass.jpg.")
-dirt = pygame.image.load("images/dirt.jpeg.")
-sun = pygame.image.load("images/sun 2.webp")
-cloud = pygame.image.load("images/cloud 2.webp")
-background = pygame.image.load("images/mario background.webp")
-player_idle = pygame.image.load("images/player Idle.png")
+grass = pygame.image.load("assets/grass.jpg.")
+dirt = pygame.image.load("assets/dirt.jpeg.")
+sun = pygame.image.load("assets/sun 2.webp")
+cloud = pygame.image.load("assets/cloud 2.webp")
+background = pygame.image.load("assets/mario background.webp")
+player_idle = pygame.image.load("assets/player Idle.png")
 
 #player assets
-run1 = pygame.image.load("images/run 1.png")
-run2 = pygame.image.load("images/run 2.png")
-run3 = pygame.image.load("images/run 3.png")
-run4 = pygame.image.load("images/run 4.png")
-run5 = pygame.image.load("images/run 5.png")
-run6 = pygame.image.load("images/run 6.png")
-run7 = pygame.image.load("images/run 7.png")
+run1 = pygame.image.load("assets/run 1.png")
+run2 = pygame.image.load("assets/run 2.png")
+run3 = pygame.image.load("assets/run 3.png")
+run4 = pygame.image.load("assets/run 4.png")
+run5 = pygame.image.load("assets/run 5.png")
+run6 = pygame.image.load("assets/run 6.png")
+run7 = pygame.image.load("assets/run 7.png")
 
 #transformed world assets
 new_grass = pygame.transform.scale(grass, (50,50), )
@@ -75,9 +75,6 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
-
-
-
 
 # game loop
 while True:
@@ -149,7 +146,6 @@ while True:
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
         draw_tiles(screen, 2)
-
 
         # player movement
         if pressed_left:

@@ -7,9 +7,9 @@ scroll = [0,0]
 generated_tile_map = None
 
 # tile assets
-grass = pygame.image.load("images/grass.jpg.")
+grass = pygame.image.load("assets/grass.jpg.")
 new_grass = pygame.transform.scale(grass, (tile_size,tile_size))
-dirt = pygame.image.load("images/dirt.jpeg.")
+dirt = pygame.image.load("assets/dirt.jpeg.")
 new_dirt = pygame.transform.scale(dirt, (tile_size,tile_size))
 
 # tile placement
@@ -49,13 +49,13 @@ def tile_placer(tile_map):
 def draw_tiles(screen, num_chunks):
     global generated_tile_map
     if generated_tile_map is None:
-        tile_map_list = []
+        chunk_list = []
 
         for i in range(num_chunks):
-            p = gen_tile_map()
-            pp = tile_placer(p)
-            tile_map_list.append(pp)
-        generated_tile_map = tile_map_list
+            tile_map = gen_tile_map()
+            chunk = tile_placer(tile_map)
+            chunk_list.append(chunk)
+        generated_tile_map = chunk_list
 
     for k in range(num_chunks):
         tile_map = generated_tile_map[k]
