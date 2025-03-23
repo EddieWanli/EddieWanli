@@ -1,31 +1,15 @@
 import pygame, random
-# tile size variable
+
+# constants
 tile_size = 50
 tiles = [1,2]
+scroll = [0,0]
+
 # tile assets
 grass = pygame.image.load("images/grass.jpg.")
 new_grass = pygame.transform.scale(grass, (tile_size,tile_size))
 dirt = pygame.image.load("images/dirt.jpeg.")
 new_dirt = pygame.transform.scale(dirt, (tile_size,tile_size))
-
-# tile map
-tilemap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#1
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#2
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#3
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#4
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#5
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#6
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#7
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#8
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#9
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#10
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#11
-           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#12
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],#13
-           [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],#14
-           [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]#15
-
-scroll = [0,0]
 
 # tile placement
 def tile_placer(tile_map):
@@ -61,8 +45,15 @@ def tile_placer(tile_map):
     return tile_map
 
 # tile generator
-def gen_tiles(screen, tile_map, num_chunks):
-         for i, row in enumerate(tile_map):
+def gen_tiles(screen ,num_chunks):
+    tile_map_list = []
+    for i in range(num_chunks):
+        p = gen_tile_map()
+        pp = tile_placer(p)
+        tile_map_list.append(pp)
+    for i in tile_map_list:
+        tile_map = i
+        for i, row in enumerate(tile_map):
             for j, tile in enumerate(row):
                 x = j * tile_size
                 y = i * tile_size
@@ -73,33 +64,23 @@ def gen_tiles(screen, tile_map, num_chunks):
                         screen.blit(new_dirt, ((x+k*20*50) - scroll[0]  ,y - scroll[1]))
 
 # tile map generator
-def gen_tile_map(num):
+def gen_tile_map():
     tile_map = []
-    chunk = []
     rows = 15
     columns = 20
     for i in range(rows):
-        chunk.append([])
+        tile_map.append([])
         for j in range(columns):
             if i >= 14:
-                chunk[i].append(2)
+                tile_map[i].append(2)
             elif i == 13:
-                chunk[i].append(1)
+                tile_map[i].append(1)
             else:
-                chunk[i].append(0)
-    for i in range(num):
-        tile_map.append(chunk)
+                tile_map[i].append(0)
     return tile_map
 
-def chunk_gen(num):
-    chunk_list = []
-    chunk = gen_tile_map(num)
-    for i in chunk:
-        chunk_list.append(i)
-    return chunk_list
 
-p = chunk_gen(2)
-print(p)
+
 
 
 

@@ -1,7 +1,7 @@
 # initialize useful modules
 import sys
 import pygame
-from terrain import tilemap, tile_placer, scroll, chunk_gen, gen_tile_map, gen_tiles
+from terrain import scroll, gen_tiles
 from button import Button
 pygame.init()
 
@@ -56,7 +56,7 @@ new_run7 = pygame.transform.scale(run7, (50,75), )
 run_ani = [new_run1, new_run2, new_run3, new_run4, new_run5, new_run6, new_run7]
 
 #movement variables
-player_x = 0
+player_x = 500
 player_y = 500
 player_sprite = new_player_idle
 player_rect = pygame.Rect(player_x, player_y, player_sprite.get_width(), player_sprite.get_height())
@@ -77,7 +77,7 @@ settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
 
-worldchunk = chunk_gen(2)
+
 
 # game loop
 while True:
@@ -148,7 +148,7 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        gen_tiles(screen, worldmap, 3)
+        gen_tiles(screen, 3)
 
         # player movement
         if pressed_left:
@@ -164,8 +164,8 @@ while True:
                 player_x += 3.5
             if pressed_left:
                 player_x -= 3.5
-        if player_x < 0:
-            player_x = 0
+        if player_x < 500:
+            player_x = 500
 
         screen.blit(player_sprite, (player_x - scroll[0], player_y - scroll[1]))
 
