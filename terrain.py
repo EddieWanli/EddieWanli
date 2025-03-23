@@ -4,6 +4,7 @@ import pygame, random
 tile_size = 50
 tiles = [1,2]
 scroll = [0,0]
+generated_tile_map = None
 
 # tile assets
 grass = pygame.image.load("images/grass.jpg.")
@@ -45,23 +46,28 @@ def tile_placer(tile_map):
     return tile_map
 
 # tile generator
-def gen_tiles(screen ,num_chunks):
-    tile_map_list = []
-    for i in range(num_chunks):
-        p = gen_tile_map()
-        pp = tile_placer(p)
-        tile_map_list.append(pp)
-    for i in tile_map_list:
-        tile_map = i
+def gen_tiles(screen, num_chunks):
+    global generated_tile_map
+    if generated_tile_map is None:
+        tile_map_list = []
+
+        for i in range(num_chunks):
+            p = gen_tile_map()
+            pp = tile_placer(p)
+            tile_map_list.append(pp)
+        generated_tile_map = tile_map_list
+
+    for k in range(num_chunks):
+        tile_map = generated_tile_map[k]
         for i, row in enumerate(tile_map):
             for j, tile in enumerate(row):
                 x = j * tile_size
                 y = i * tile_size
-                for k in range(num_chunks):
-                    if tile == 1:
-                        screen.blit(new_grass, ((x+k*20*50) - scroll[0] ,y - scroll[1]))
-                    elif tile == 2:
-                        screen.blit(new_dirt, ((x+k*20*50) - scroll[0]  ,y - scroll[1]))
+                if tile == 1:
+                    screen.blit(new_grass, ((x + k * 20 * 50) - scroll[0], y - scroll[1]))
+                elif tile == 2:
+                    screen.blit(new_dirt, ((x + k * 20 * 50) - scroll[0], y - scroll[1]))
+
 
 # tile map generator
 def gen_tile_map():

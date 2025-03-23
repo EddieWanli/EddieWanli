@@ -148,7 +148,8 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        gen_tiles(screen, 3)
+        gen_tiles(screen, 2)
+
 
         # player movement
         if pressed_left:
