@@ -46,7 +46,7 @@ def tile_placer(tile_map):
     return tile_map
 
 # tile generator
-def gen_tiles(screen, num_chunks):
+def draw_tiles(screen, num_chunks):
     global generated_tile_map
     if generated_tile_map is None:
         tile_map_list = []
@@ -85,6 +85,8 @@ def gen_tile_map():
                 tile_map[i].append(0)
     return tile_map
 
+test = gen_tile_map()
+print(test)
 
 
 

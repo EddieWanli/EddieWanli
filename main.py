@@ -1,7 +1,7 @@
 # initialize useful modules
 import sys
 import pygame
-from terrain import scroll, gen_tiles
+from terrain import scroll, draw_tiles
 from button import Button
 pygame.init()
 
@@ -148,7 +148,7 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        gen_tiles(screen, 2)
+        draw_tiles(screen, 2)
 
 
         # player movement
