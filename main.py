@@ -66,7 +66,9 @@ pressed_up = False
 pressed_down = False
 pressed_shift = False
 pressed_jump = False
-
+gravity = 1
+jump_height = 15
+y_velocity = jump_height
 # default game state
 game_state = "menu"
 
@@ -98,12 +100,13 @@ while True:
                     elif event.key == pygame.K_a:
                         pressed_left = True
                     elif event.key == pygame.K_w:
-                        pressed_up = True
-                    elif event.key == pygame.K_s:
-                        pressed_down = True
+                        pressed_jump = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
                         player_sprite = new_run1
+                    elif event.key == pygame.K_SPACE:
+                        pressed_jump = True
+
 
         if event.type == pygame.KEYUP:
             if game_state == "game":
@@ -111,10 +114,6 @@ while True:
                     pressed_right = False
                 if event.key == pygame.K_a:
                     pressed_left = False
-                if event.key == pygame.K_w:
-                    pressed_up = False
-                if event.key == pygame.K_s:
-                    pressed_down = False
                 if event.key == pygame.K_LSHIFT:
                     pressed_shift = False
                     player_sprite = new_player_idle
@@ -145,7 +144,7 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        draw_tiles(screen, 2)
+        draw_tiles(screen, 250)
 
         # player movement
         if pressed_left:
@@ -163,8 +162,14 @@ while True:
                 player_x -= 3.5
         if player_x < 500:
             player_x = 500
+        if pressed_jump:
+            player_y -= y_velocity
+            y_velocity -= gravity
+            if y_velocity < -jump_height:
+                pressed_jump = False
+                y_velocity = jump_height
 
-        screen.blit(player_sprite, (player_x - scroll[0], player_y - scroll[1]))
+        screen.blit(player_sprite, (player_x - scroll[0], player_y - scroll[1] ))
 
     elif game_state == "settings":
         screen.fill("dark grey")
@@ -180,7 +185,6 @@ while True:
         pygame.draw.rect(screen, "light grey", pygame.Rect(616, 300, 100, 50), 0, 5)
         pygame.draw.rect(screen, "black", pygame.Rect(616, 300, 100, 50), 2, 5)
         # add progress logic here
-
     pygame.display.update()
     timer.tick(fps)
 

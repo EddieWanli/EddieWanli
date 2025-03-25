@@ -85,8 +85,7 @@ def gen_tile_map():
                 tile_map[i].append(0)
     return tile_map
 
-test = gen_tile_map()
-print(test)
+
 
 
 
