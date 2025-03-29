@@ -61,6 +61,7 @@ player_rect.y = 500
 pressed_right = False
 pressed_left = False
 pressed_shift = False
+pressed_jump = False
 gravity = 0
 
 # default game state
@@ -94,7 +95,7 @@ while True:
                     elif event.key == pygame.K_a:
                         pressed_left = True
                     elif event.key == pygame.K_w or event.key == pygame.K_SPACE:
-                        gravity = - 17
+                        pressed_jump = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
                         player_sprite = new_run1
@@ -109,6 +110,8 @@ while True:
                 if event.key == pygame.K_LSHIFT:
                     pressed_shift = False
                     player_sprite = new_player_idle
+                if event.key == pygame.K_SPACE:
+                    pressed_jump = False
 
         # button click checks
         if game_state == "menu":
@@ -148,6 +151,9 @@ while True:
                 player_rect.x += 3.5
             if pressed_left:
                 player_rect.x -= 3.5
+        if pressed_jump:
+            if player_rect.y == 520:
+                gravity = - 17
         gravity += 1
         player_rect.y += gravity
         if player_rect.left < 500:
