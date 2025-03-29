@@ -1,8 +1,7 @@
 # initialize useful modules
-import sys
-import pygame
-from terrain import scroll, draw_tiles
+import sys, pygame
 from button import Button
+from terrain import scroll, draw_tiles
 pygame.init()
 
 # create game window
@@ -10,7 +9,6 @@ screen = pygame.display.set_mode((1000, 750))
 pygame.display.set_caption("Terraworld")
 
 # clock controls
-fps = 60
 timer = pygame.time.Clock()
 
 # game text
@@ -45,8 +43,8 @@ new_dirt = pygame.transform.scale(dirt, (50,50), )
 new_sun = pygame.transform.scale(sun, (200, 200), )
 new_cloud = pygame.transform.scale(cloud, (200,200), )
 new_background = pygame.transform.scale(background, (1000,750), )
-new_player_idle = pygame.transform.scale(player_idle, (50,80))
-new_run1 = pygame.transform.scale(run1, (50,80), )
+new_player_idle = pygame.transform.scale(player_idle, (40,80))
+new_run1 = pygame.transform.scale(run1, (40,80), )
 new_run2 = pygame.transform.scale(run2, (50,75), )
 new_run3 = pygame.transform.scale(run3, (50,75), )
 new_run4 = pygame.transform.scale(run4, (50,75), )
@@ -56,19 +54,15 @@ new_run7 = pygame.transform.scale(run7, (50,75), )
 run_ani = [new_run1, new_run2, new_run3, new_run4, new_run5, new_run6, new_run7]
 
 #movement variables
-player_x = 500
-player_y = 500
 player_sprite = new_player_idle
-player_rect = pygame.Rect(player_x, player_y, player_sprite.get_width(), player_sprite.get_height())
+player_rect = player_sprite.get_rect(midbottom=(500, 500))
+player_rect.x = 500
+player_rect.y = 500
 pressed_right = False
 pressed_left = False
-pressed_up = False
-pressed_down = False
 pressed_shift = False
-pressed_jump = False
-gravity = 1
-jump_height = 15
-y_velocity = jump_height
+gravity = 0
+
 # default game state
 game_state = "menu"
 
@@ -78,10 +72,10 @@ progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
 
+
 # game loop
 while True:
-    scroll[0] += (player_x - scroll[0] - 500)/10
-
+    scroll[0] += (player_rect.x - scroll[0] - 500)/10
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -99,13 +93,11 @@ while True:
                         pressed_right = True
                     elif event.key == pygame.K_a:
                         pressed_left = True
-                    elif event.key == pygame.K_w:
-                        pressed_jump = True
+                    elif event.key == pygame.K_w or event.key == pygame.K_SPACE:
+                        gravity = - 17
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
                         player_sprite = new_run1
-                    elif event.key == pygame.K_SPACE:
-                        pressed_jump = True
 
 
         if event.type == pygame.KEYUP:
@@ -144,32 +136,44 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        draw_tiles(screen, 250)
+        world = draw_tiles(screen, 250)
 
         # player movement
-        if pressed_left:
-            player_x -= 2
         if pressed_right:
-            player_x += 2
-        if pressed_up:
-            player_y -= 2
-        if pressed_down:
-            player_y += 2
+            player_rect.x += 2
+        if pressed_left:
+            player_rect.x -= 2
         if pressed_shift:
             if pressed_right:
-                player_x += 3.5
+                player_rect.x += 3.5
             if pressed_left:
-                player_x -= 3.5
-        if player_x < 500:
-            player_x = 500
-        if pressed_jump:
-            player_y -= y_velocity
-            y_velocity -= gravity
-            if y_velocity < -jump_height:
-                pressed_jump = False
-                y_velocity = jump_height
+                player_rect.x -= 3.5
+        gravity += 1
+        player_rect.y += gravity
+        if player_rect.left < 500:
+            player_rect.left = 500
+        if player_rect.y > 520:
+            player_rect.y = 520
+        rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 40, 80)
+        pygame.draw.rect(screen, "red", rect, 2)
 
-        screen.blit(player_sprite, (player_x - scroll[0], player_y - scroll[1] ))
+        #collisions
+
+        for tile in world:
+            pygame.draw.rect(screen, 'red', tile, 2 )
+            if rect.colliderect(tile):
+                if rect.bottom > tile.top:
+                    rect.bottom = tile.top
+
+
+
+
+
+
+
+
+
+        screen.blit(player_sprite, (player_rect.x - scroll[0], player_rect.y ))
 
     elif game_state == "settings":
         screen.fill("dark grey")
@@ -185,8 +189,11 @@ while True:
         pygame.draw.rect(screen, "light grey", pygame.Rect(616, 300, 100, 50), 0, 5)
         pygame.draw.rect(screen, "black", pygame.Rect(616, 300, 100, 50), 2, 5)
         # add progress logic here
+
+
+
     pygame.display.update()
-    timer.tick(fps)
+    timer.tick(60)
 
 
 

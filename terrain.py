@@ -57,16 +57,22 @@ def draw_tiles(screen, num_chunks):
             chunk_list.append(chunk)
         generated_tile_map = chunk_list
 
+    rect_list = []
     for k in range(num_chunks):
         tile_map = generated_tile_map[k]
         for i, row in enumerate(tile_map):
             for j, tile in enumerate(row):
-                x = j * tile_size
-                y = i * tile_size
+                x = (j * tile_size + k * 20 * 50) - scroll[0]
+                y = (i * tile_size) - scroll[1]
                 if tile == 1:
-                    screen.blit(new_grass, ((x + k * 20 * 50) - scroll[0], y - scroll[1]))
+                    screen.blit(new_grass, (x, y))
+                    grass_rect = pygame.Rect(x, y, tile_size, tile_size)
+                    rect_list.append(grass_rect)
                 elif tile == 2:
-                    screen.blit(new_dirt, ((x + k * 20 * 50) - scroll[0], y - scroll[1]))
+                    screen.blit(new_dirt, (x ,y))
+                    dirt_rect = pygame.Rect(x, y, tile_size, tile_size)
+                    rect_list.append(dirt_rect)
+    return rect_list
 
 
 # tile map generator
@@ -84,6 +90,8 @@ def gen_tile_map():
             else:
                 tile_map[i].append(0)
     return tile_map
+
+
 
 
 
