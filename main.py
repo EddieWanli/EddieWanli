@@ -110,7 +110,7 @@ while True:
                 if event.key == pygame.K_LSHIFT:
                     pressed_shift = False
                     player_sprite = new_player_idle
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_w or event.key == pygame.K_SPACE:
                     pressed_jump = False
 
         # button click checks
