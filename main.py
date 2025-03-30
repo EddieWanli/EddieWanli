@@ -1,7 +1,7 @@
 # initialize useful modules
 import sys, pygame
 from button import Button
-from terrain import scroll, draw_tiles
+from terrain import scroll, draw_tiles, collision_test
 pygame.init()
 
 # create game window
@@ -63,6 +63,7 @@ pressed_left = False
 pressed_shift = False
 pressed_jump = False
 gravity = 0
+on_ground = False
 
 # default game state
 game_state = "menu"
@@ -152,34 +153,32 @@ while True:
             if pressed_left:
                 player_rect.x -= 3.5
         if pressed_jump:
-            if player_rect.y == 520:
+            if on_ground == True:
                 gravity = - 17
-        gravity += 1
-        player_rect.y += gravity
+                on_ground = False
+        if not on_ground:
+            gravity += 1
+            player_rect.y += gravity
         if player_rect.left < 500:
             player_rect.left = 500
-        if player_rect.y > 520:
-            player_rect.y = 520
-        rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 40, 80)
-        pygame.draw.rect(screen, "red", rect, 2)
+        if on_ground:
+            gravity = 0
+
+        rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 35, 80)
+
 
         #collisions
-
+        on_ground = False
         for tile in world:
             pygame.draw.rect(screen, 'red', tile, 2 )
             if rect.colliderect(tile):
                 if rect.bottom > tile.top:
                     rect.bottom = tile.top
+                    on_ground = True
+                else:
+                    on_ground = False
 
-
-
-
-
-
-
-
-
-        screen.blit(player_sprite, (player_rect.x - scroll[0], player_rect.y ))
+        screen.blit(player_sprite, (rect.x, rect.y ))
 
     elif game_state == "settings":
         screen.fill("dark grey")
