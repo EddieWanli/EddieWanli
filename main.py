@@ -93,13 +93,15 @@ while True:
 
                     if event.key == pygame.K_d:
                         pressed_right = True
+                        player_sprite = new_player_idle
                     elif event.key == pygame.K_a:
                         pressed_left = True
+                        player_sprite = pygame.transform.flip(new_player_idle, True, False)
                     elif event.key == pygame.K_w or event.key == pygame.K_SPACE:
                         pressed_jump = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
-                        player_sprite = new_run1
+
 
 
         if event.type == pygame.KEYUP:
@@ -110,7 +112,6 @@ while True:
                     pressed_left = False
                 if event.key == pygame.K_LSHIFT:
                     pressed_shift = False
-                    player_sprite = new_player_idle
                 if event.key == pygame.K_w or event.key == pygame.K_SPACE:
                     pressed_jump = False
 
@@ -150,8 +151,17 @@ while True:
         if pressed_shift:
             if pressed_right:
                 player_rect.x += 3.5
+                player_sprite = new_run1
             if pressed_left:
                 player_rect.x -= 3.5
+                player_sprite = pygame.transform.flip(new_run1, True, False)
+        else:
+            if pressed_right:
+                player_rect.x += 2
+                player_sprite = new_player_idle
+            if pressed_left:
+                player_rect.x -= 2
+                player_sprite = pygame.transform.flip(new_player_idle, True, False)
         if pressed_jump:
             if on_ground == True:
                 gravity = - 17
