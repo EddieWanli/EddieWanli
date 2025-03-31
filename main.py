@@ -1,6 +1,7 @@
 # initialize useful modules
 import sys, pygame
 from button import Button
+from player import Player
 from terrain import scroll, draw_tiles, handle_collisions
 
 pygame.init()
@@ -27,9 +28,10 @@ dirt = pygame.image.load("assets/dirt.jpeg.")
 sun = pygame.image.load("assets/sun 2.webp")
 cloud = pygame.image.load("assets/cloud 2.webp")
 background = pygame.image.load("assets/mario background.webp")
-player_idle = pygame.image.load("assets/player Idle.png")
+
 
 #player assets
+player_idle = pygame.image.load("assets/player Idle.png")
 run1 = pygame.image.load("assets/run 1.png")
 run2 = pygame.image.load("assets/run 2.png")
 run3 = pygame.image.load("assets/run 3.png")
@@ -44,14 +46,16 @@ new_dirt = pygame.transform.scale(dirt, (50,50), )
 new_sun = pygame.transform.scale(sun, (200, 200), )
 new_cloud = pygame.transform.scale(cloud, (200,200), )
 new_background = pygame.transform.scale(background, (1000,750), )
+
+#transformed player assets
 new_player_idle = pygame.transform.scale(player_idle, (40,80))
 new_run1 = pygame.transform.scale(run1, (40,80), )
-new_run2 = pygame.transform.scale(run2, (50,75), )
-new_run3 = pygame.transform.scale(run3, (50,75), )
-new_run4 = pygame.transform.scale(run4, (50,75), )
-new_run5 = pygame.transform.scale(run5, (50,75), )
-new_run6 = pygame.transform.scale(run6, (50,75), )
-new_run7 = pygame.transform.scale(run7, (50,75), )
+new_run2 = pygame.transform.scale(run2, (40,80), )
+new_run3 = pygame.transform.scale(run3, (40,80), )
+new_run4 = pygame.transform.scale(run4, (40,80), )
+new_run5 = pygame.transform.scale(run5, (40,80), )
+new_run6 = pygame.transform.scale(run6, (40,80), )
+new_run7 = pygame.transform.scale(run7, (40,80), )
 run_ani = [new_run1, new_run2, new_run3, new_run4, new_run5, new_run6, new_run7]
 
 #movement variables
@@ -77,6 +81,11 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
+
+# player
+running_sprites = pygame.sprite.Group()
+player = Player(player_rect.x,player_rect.y, run_ani)
+running_sprites.add(player)
 
 
 # game loop
@@ -105,8 +114,6 @@ while True:
                         pressed_jump = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
-
-
 
         if event.type == pygame.KEYUP:
             if game_state == "game":
@@ -187,6 +194,7 @@ while True:
 
         if player_rect.left < 0:
             player_rect.left = 0
+
 
         screen.blit(player_sprite, (rect.x, rect.y ))
 
