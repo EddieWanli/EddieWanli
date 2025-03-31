@@ -65,8 +65,8 @@ pressed_shift = False
 pressed_jump = False
 gravity = 0
 on_ground = False
-x_velocity = 2
-x_sprint_velocity = 4
+x_velocity = 4
+x_sprint_velocity = 6
 y_velocity = 0
 
 # default game state
@@ -155,6 +155,7 @@ while True:
             else:
                 player_rect.x += x_velocity
                 player_sprite = new_player_idle
+
         if pressed_left:
             if pressed_shift:
                 player_rect.x -= x_sprint_velocity
@@ -167,26 +168,14 @@ while True:
             if on_ground:
                 y_velocity = - 17
                 on_ground = False
+
         if not on_ground:
             y_velocity += 1
         player_rect.y += y_velocity
 
-        if on_ground:
-            y_velocity = 0
-
+        # collisions
         rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 35, 80)
-
-        on_ground, hit_ceiling, hit_left, hit_right = handle_collisions(rect, world)
-
-        if on_ground and y_velocity > 0:
-            y_velocity = 0
-        if hit_ceiling and y_velocity < 0:
-            y_velocity = 0
-
-            # Handle jump input
-        if pressed_jump and on_ground:
-            y_velocity = -17
-            on_ground = False
+        on_ground, hit_left, hit_right = handle_collisions(rect, world)
 
         for tile in world:
             if hit_right:
@@ -195,16 +184,6 @@ while True:
                 pressed_left = False
             if on_ground:
                 y_velocity = 0
-
-        if pressed_right and not hit_right:
-            current_velocity = x_sprint_velocity if pressed_shift else x_velocity
-            player_rect.x += current_velocity
-            player_sprite = new_run1 if pressed_shift else new_player_idle
-
-        if pressed_left and not hit_left:
-            current_velocity = x_sprint_velocity if pressed_shift else x_velocity
-            player_rect.x -= current_velocity
-            player_sprite = pygame.transform.flip(new_run1 if pressed_shift else new_player_idle, True, False)
 
         if player_rect.left < 0:
             player_rect.left = 0
