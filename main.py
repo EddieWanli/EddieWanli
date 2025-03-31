@@ -1,7 +1,8 @@
 # initialize useful modules
 import sys, pygame
 from button import Button
-from terrain import scroll, draw_tiles, collision_test
+from terrain import scroll, draw_tiles, handle_collisions
+
 pygame.init()
 
 # create game window
@@ -64,6 +65,9 @@ pressed_shift = False
 pressed_jump = False
 gravity = 0
 on_ground = False
+x_velocity = 2
+x_sprint_velocity = 4
+y_velocity = 0
 
 # default game state
 game_state = "menu"
@@ -141,52 +145,69 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
-        world = draw_tiles(screen, 250)
+        world = draw_tiles(screen, 20)
 
         # player movement
         if pressed_right:
-            player_rect.x += 2
-        if pressed_left:
-            player_rect.x -= 2
-        if pressed_shift:
-            if pressed_right:
-                player_rect.x += 3.5
+            if pressed_shift:
+                player_rect.x += x_sprint_velocity
                 player_sprite = new_run1
-            if pressed_left:
-                player_rect.x -= 3.5
-                player_sprite = pygame.transform.flip(new_run1, True, False)
-        else:
-            if pressed_right:
-                player_rect.x += 2
+            else:
+                player_rect.x += x_velocity
                 player_sprite = new_player_idle
-            if pressed_left:
-                player_rect.x -= 2
+        if pressed_left:
+            if pressed_shift:
+                player_rect.x -= x_sprint_velocity
+                player_sprite = pygame.transform.flip(new_run1, True, False)
+            else:
+                player_rect.x -= x_velocity
                 player_sprite = pygame.transform.flip(new_player_idle, True, False)
+
         if pressed_jump:
-            if on_ground == True:
-                gravity = - 17
+            if on_ground:
+                y_velocity = - 17
                 on_ground = False
         if not on_ground:
-            gravity += 1
-            player_rect.y += gravity
-        if player_rect.left < 500:
-            player_rect.left = 500
+            y_velocity += 1
+        player_rect.y += y_velocity
+
         if on_ground:
-            gravity = 0
+            y_velocity = 0
 
         rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 35, 80)
 
+        on_ground, hit_ceiling, hit_left, hit_right = handle_collisions(rect, world)
 
-        #collisions
-        on_ground = False
+        if on_ground and y_velocity > 0:
+            y_velocity = 0
+        if hit_ceiling and y_velocity < 0:
+            y_velocity = 0
+
+            # Handle jump input
+        if pressed_jump and on_ground:
+            y_velocity = -17
+            on_ground = False
+
         for tile in world:
-            pygame.draw.rect(screen, 'red', tile, 2 )
-            if rect.colliderect(tile):
-                if rect.bottom > tile.top:
-                    rect.bottom = tile.top
-                    on_ground = True
-                else:
-                    on_ground = False
+            if hit_right:
+                pressed_right = False
+            if hit_left:
+                pressed_left = False
+            if on_ground:
+                y_velocity = 0
+
+        if pressed_right and not hit_right:
+            current_velocity = x_sprint_velocity if pressed_shift else x_velocity
+            player_rect.x += current_velocity
+            player_sprite = new_run1 if pressed_shift else new_player_idle
+
+        if pressed_left and not hit_left:
+            current_velocity = x_sprint_velocity if pressed_shift else x_velocity
+            player_rect.x -= current_velocity
+            player_sprite = pygame.transform.flip(new_run1 if pressed_shift else new_player_idle, True, False)
+
+        if player_rect.left < 0:
+            player_rect.left = 0
 
         screen.blit(player_sprite, (rect.x, rect.y ))
 
@@ -204,8 +225,6 @@ while True:
         pygame.draw.rect(screen, "light grey", pygame.Rect(616, 300, 100, 50), 0, 5)
         pygame.draw.rect(screen, "black", pygame.Rect(616, 300, 100, 50), 2, 5)
         # add progress logic here
-
-
 
     pygame.display.update()
     timer.tick(60)

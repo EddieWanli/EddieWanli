@@ -91,13 +91,53 @@ def gen_tile_map():
                 tile_map[i].append(0)
     return tile_map
 
-def collision_test(rect, tiles):
-    hit_list = []
-    for tile in tiles:
-        if rect.colliderect(tile):
-            hit_list.append(tile)
-    return hit_list
 
+def handle_collisions(player_rect, world_tiles):
+    # Create a slightly larger rect to detect nearby tiles
+    detection_rect = pygame.Rect(player_rect.x, player_rect.y, player_rect.width, player_rect.height)
+    detection_rect.inflate_ip(5, 5)  # Make it slightly larger to detect adjacent tiles
+
+    # Track which direction has collisions
+    on_ground = False
+    hit_ceiling = False
+    hit_left = False
+    hit_right = False
+
+    # Store colliding tiles
+    colliding_tiles = []
+    for tile in world_tiles:
+        if detection_rect.colliderect(tile):
+            colliding_tiles.append(tile)
+
+    # Handle vertical collisions first (ground/ceiling)
+    for tile in colliding_tiles:
+        # Ground collision (feet)
+        if player_rect.bottom > tile.top and player_rect.bottom < tile.top + 20:
+            if player_rect.right > tile.left + 5 and player_rect.left < tile.right - 5:
+                player_rect.bottom = tile.top
+                on_ground = True
+
+        # Ceiling collision (head)
+        elif player_rect.top < tile.bottom and player_rect.top > tile.bottom - 20:
+            if player_rect.right > tile.left + 5 and player_rect.left < tile.right - 5:
+                player_rect.top = tile.bottom
+                hit_ceiling = True
+
+    # Then handle horizontal collisions (sides)
+    for tile in colliding_tiles:
+        # Right collision
+        if player_rect.right > tile.left and player_rect.right < tile.left + 20:
+            if player_rect.bottom > tile.top + 5 and player_rect.top < tile.bottom - 5:
+                player_rect.right = tile.left
+                hit_right = True
+
+        # Left collision
+        elif player_rect.left < tile.right and player_rect.left > tile.right - 20:
+            if player_rect.bottom > tile.top + 5 and player_rect.top < tile.bottom - 5:
+                player_rect.left = tile.right
+                hit_left = True
+
+    return on_ground, hit_ceiling, hit_left, hit_right
 
 
 
