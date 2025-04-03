@@ -1,29 +1,25 @@
 import pygame
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, sprite_list):
-        super().__init__()
-        self.sprites = []
-        for sprite in sprite_list:
-            self.sprites.append(sprite)
-        self.current_sprite = 0
-        self.image = self.sprites[self.current_sprite]
+# Animation variables
+current_frame = 0
+last_update = pygame.time.get_ticks()
 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (pos_x, pos_y)
+# Animation update function
+def animate_sprite(animation_list, animation_speed):
+    global current_frame, last_update
+    now = pygame.time.get_ticks()
 
-    def animate(self):
-        self.is_animating = True
+    # Update the frame based on the speed
+    if now - last_update > 100:  # 100 ms per frame (adjust as needed)
+        current_frame += animation_speed
+        last_update = now
 
-    def update(self):
-        if self.is_animating:
-            self.current_sprite += 0.15
+    # Loop animation
+    if current_frame >= len(animation_list):
+        current_frame = 0
 
-        if self.current_sprite >= len(self.sprites):
-            self.current_sprite = 0
-            self.is_animating = False
+    return animation_list[int(current_frame)]
 
-        self.image = self.sprites[int(self.current_sprite)]
 
 
 
