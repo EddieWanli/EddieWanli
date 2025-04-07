@@ -1,5 +1,5 @@
 # initialize useful modules
-import sys, pygame
+import sys
 from button import Button
 from player import *
 from terrain import *
@@ -16,11 +16,21 @@ timer = pygame.time.Clock()
 # game text
 font = pygame.font.Font("assets/retro.ttf", 50)
 font2 = pygame.font.Font(None, 35)
+font3 = pygame.font.Font(None, 20)
 title_text = font.render("TERRAWORLD", True, "black")
 title_text_rect = title_text.get_rect(midbottom=(500, 100))
 back_to_menu = font2.render("Esc - Main Menu", True, "black")
 author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
+
+#tutorial
+move_left_text = font3.render("A - move left", True, "black")
+move_right_text = font3.render("D - move right" , True, "black")
+jump_text = font3.render("W/SPACE - Jump" , True, "black")
+run_text = font3.render("Shift + A/D  - Run" , True, "black")
+defend_text = font3.render("RMB + A/D  - Defend", True, "black")
+attack_text = font3.render("LMB - Attack" , True, "black")
+
 
 #world assets
 grass = pygame.image.load("assets/grass.jpg.")
@@ -28,6 +38,7 @@ dirt = pygame.image.load("assets/dirt.jpeg.")
 sun = pygame.image.load("assets/sun 2.webp")
 cloud = pygame.image.load("assets/cloud 2.webp")
 background = pygame.image.load("assets/mario background.webp")
+apple = pygame.image.load("assets/player sprites/apple.png").convert_alpha()
 
 #transformed world assets
 new_grass = pygame.transform.scale(grass, (50,50), )
@@ -71,6 +82,9 @@ defend = pygame.image.load("assets/player sprites/defend.png")
 hurt1 = pygame.image.load("assets/player sprites/hurt 1.png")
 hurt2 = pygame.image.load("assets/player sprites/hurt 2.png")
 
+#enemy
+
+enemy_idle = pygame.image.load("assets/enemy sprites/Idle.png")
 
 #sprites
 new_walk1 = pygame.transform.scale(walk1,(40,80))
@@ -113,12 +127,19 @@ new_hurt = pygame.transform.scale(hurt1, (40,80))
 new_hurt2 = pygame.transform.scale(hurt2, (40,80))
 hurt_list = [new_hurt, new_hurt2]
 
+new_enemy_idle = pygame.transform.scale(enemy_idle, (60,80))
+
+#enemy
+enemy_sprite = new_enemy_idle
+enemy_rect = enemy_sprite.get_rect()
 
 #player
 player_idle = pygame.image.load("assets/player Idle.png").convert_alpha()
 new_player_idle = pygame.transform.scale(player_idle, (40, 80))
 player_sprite = new_player_idle
 player_rect = player_sprite.get_rect(midbottom=(500, 500))
+new_apple = pygame.transform.scale(apple, (20,20))
+apple_rect = new_apple.get_rect()
 
 #action booleans
 pressed_right = False
@@ -143,6 +164,7 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
+
 
 # game loop
 while True:
@@ -229,9 +251,14 @@ while True:
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
+        screen.blit( move_right_text, ( 870,10))
+        screen.blit( move_left_text, ( 870,30))
+        screen.blit( jump_text, ( 870,50))
+        screen.blit(run_text, ( 870,70))
+        screen.blit(defend_text, ( 870,90))
+        screen.blit(attack_text, ( 870,110))
+
         world = draw_tiles(screen, 20)
-
-
 
         # player movement
         if pressed_right:
@@ -245,7 +272,7 @@ while True:
         if pressed_left:
             if pressed_shift:
                 player_rect.x -= x_sprint_velocity
-                temp = animate_sprite(run_list, 1.2)
+                temp = animate_sprite(run_list, 1)
                 player_sprite = pygame.transform.flip(temp, True, False)
             else:
                 player_rect.x -= x_velocity
@@ -266,7 +293,6 @@ while True:
         if pressed_attack:
             player_sprite = animate_sprite(attack_list, 1)
 
-
         if not on_ground:
             y_velocity += 1
         player_rect.y += y_velocity
@@ -278,14 +304,15 @@ while True:
         for tile in world:
             if hit_right:
                 pressed_right = False
+
             if hit_left:
                 pressed_left = False
+
             if on_ground:
                 y_velocity = 0
 
         if player_rect.left < 0:
             player_rect.left = 0
-
 
         screen.blit(player_sprite, rect)
 
