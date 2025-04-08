@@ -22,6 +22,8 @@ title_text_rect = title_text.get_rect(midbottom=(500, 100))
 back_to_menu = font2.render("Esc - Main Menu", True, "black")
 author = font2.render("By Eddie Wanli", True, "black")
 author_pos = author.get_rect(center=(900, 725))
+death_text = font.render("You Died", False, "black")
+return_menu_text = font2.render("Esc - Quit game", False, "black")
 
 #tutorial
 move_left_text = font3.render("A - move left", True, "black")
@@ -30,7 +32,6 @@ jump_text = font3.render("W/SPACE - Jump" , True, "black")
 run_text = font3.render("Shift + A/D  - Run" , True, "black")
 defend_text = font3.render("RMB + A/D  - Defend", True, "black")
 attack_text = font3.render("LMB - Attack" , True, "black")
-
 
 #world assets
 grass = pygame.image.load("assets/grass.jpg.")
@@ -71,19 +72,8 @@ attack3 = pygame.image.load("assets/player sprites/attack 3.png")
 attack4 = pygame.image.load("assets/player sprites/attack 4.png")
 attack5 = pygame.image.load("assets/player sprites/attack 5.png")
 
-dead1 = pygame.image.load("assets/player sprites/dead 1.png")
-dead2 = pygame.image.load("assets/player sprites/dead 2.png")
-dead3 = pygame.image.load("assets/player sprites/dead 3.png")
-dead4 = pygame.image.load("assets/player sprites/dead 4.png")
-dead5 = pygame.image.load("assets/player sprites/dead 5.png")
-
+dead = pygame.image.load("assets/player sprites/dead 5.png")
 defend = pygame.image.load("assets/player sprites/defend.png")
-
-hurt1 = pygame.image.load("assets/player sprites/hurt 1.png")
-hurt2 = pygame.image.load("assets/player sprites/hurt 2.png")
-
-#enemy
-
 enemy_idle = pygame.image.load("assets/enemy sprites/Idle.png")
 
 #sprites
@@ -113,33 +103,19 @@ new_attack4 = pygame.transform.scale(attack4, (40,80))
 new_attack5 = pygame.transform.scale(attack5, (40,80))
 attack_list = [new_attack1, new_attack2, new_attack3, new_attack4, new_attack5]
 
-new_dead1 = pygame.transform.scale(dead1, (40,80))
-new_dead2 = pygame.transform.scale(dead2, (40,80))
-new_dead3 = pygame.transform.scale(dead3, (40,80))
-new_dead4 = pygame.transform.scale(dead4, (40,80))
-new_dead5 = pygame.transform.scale(dead5, (40,80))
-dead_list = [new_dead1, new_dead2, new_dead3, new_dead4, new_dead5]
-
+new_dead = pygame.transform.scale(dead, (40,80))
 new_defend = pygame.transform.scale(defend, (40,80))
-defend_list = [new_defend]
-
-new_hurt = pygame.transform.scale(hurt1, (40,80))
-new_hurt2 = pygame.transform.scale(hurt2, (40,80))
-hurt_list = [new_hurt, new_hurt2]
-
 new_enemy_idle = pygame.transform.scale(enemy_idle, (60,80))
-
-#enemy
-enemy_sprite = new_enemy_idle
-enemy_rect = enemy_sprite.get_rect()
 
 #player
 player_idle = pygame.image.load("assets/player Idle.png").convert_alpha()
 new_player_idle = pygame.transform.scale(player_idle, (40, 80))
 player_sprite = new_player_idle
 player_rect = player_sprite.get_rect(midbottom=(500, 500))
-new_apple = pygame.transform.scale(apple, (20,20))
-apple_rect = new_apple.get_rect()
+
+# health
+player_health = 100
+max_health = 100
 
 #action booleans
 pressed_right = False
@@ -156,6 +132,10 @@ x_velocity = 4
 x_sprint_velocity = 6
 y_velocity = 0
 
+#progress
+kill_count = 0
+start_time = pygame.time.get_ticks()
+
 # default game state
 game_state = "menu"
 
@@ -164,6 +144,14 @@ new_game_button = Button("New Game",412.5,250, font2,  screen, (150,150,150))
 progress_button = Button("Progress",412.5,310, font2, screen, (175,175,175))
 settings_button = Button("Settings",412.5,370, font2, screen, "light grey")
 exit_button = Button("Exit",412.5,450, font2, screen, (250,50,87))
+
+# apple
+new_apple = pygame.transform.scale(apple, (20,20))
+apple_positions = [(random.randint(0, 20000), 500) for _ in range(10)]
+
+#enemy
+enemy_positions = [(random.randint(0, 20000), 500) for _ in range(10)]
+enemy_sprite = pygame.transform.flip(new_enemy_idle, True, False)
 
 
 # game loop
@@ -190,6 +178,9 @@ while True:
                         pressed_jump = True
                     elif event.key == pygame.K_LSHIFT:
                         pressed_shift = True
+                    elif event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -248,9 +239,15 @@ while True:
         exit_button.draw()
 
     elif game_state == "game":
+
         # background
         screen.blit(new_background, (0,0))
         screen.blit(new_sun, (695,25))
+
+        # world generation
+        world = draw_tiles(screen, 20)
+
+        #tutorial text
         screen.blit( move_right_text, ( 870,10))
         screen.blit( move_left_text, ( 870,30))
         screen.blit( jump_text, ( 870,50))
@@ -258,7 +255,77 @@ while True:
         screen.blit(defend_text, ( 870,90))
         screen.blit(attack_text, ( 870,110))
 
-        world = draw_tiles(screen, 20)
+        #player health UI
+        draw_health_bar(screen, 20, 20, player_health, max_health)
+        health_text = font3.render(f"{player_health}/{max_health}", True, "black")
+        screen.blit(health_text, ( 30,  25))
+
+        #kill count
+        kill_count_text = font2.render("Kill Count: " + str(kill_count), True, (255, 255, 255))
+        screen.blit(kill_count_text, ( 30, 50))
+
+
+
+        #time elapsed
+        time_elapsed = pygame.time.get_ticks() - start_time
+        seconds_elapsed = time_elapsed // 1000
+        time_text = font3.render(f"Time Elapsed: {seconds_elapsed} seconds", True, (255, 255, 255))
+        screen.blit(time_text, ( 30, 5))
+
+        #apple handling
+        #position
+        apple_rects = []
+        for pos in apple_positions:
+            x, y = pos
+            apple_rect = pygame.Rect(x, y, new_apple.get_width(), new_apple.get_height())
+            apple_rects.append(apple_rect)
+            screen.blit(new_apple, (x - scroll[0], y))
+
+        #collision
+        new_apple_positions = []
+        for i, rect in enumerate(apple_rects):
+            if player_rect.colliderect(rect):
+                if player_health < 100:
+                    player_health = min(player_health + 25, 100)  # cap at 100
+            else:
+                new_apple_positions.append(apple_positions[i])
+
+        apple_positions = new_apple_positions
+
+
+        #enemy handling
+        #position
+        enemy_rects = []
+        for pos in enemy_positions:
+            x, y = pos
+            enemy_rect = pygame.Rect(x, y, enemy_sprite.get_width(), enemy_sprite.get_height())
+            enemy_rects.append(enemy_rect)
+            screen.blit(enemy_sprite, (x - scroll[0], y))
+
+        #collision
+        new_enemy_positions = []
+        for i, rect in enumerate(enemy_rects):
+            if player_rect.colliderect(rect):
+                player_health = min(player_health - 25, 100)
+            else:
+                new_enemy_positions.append(enemy_positions[i])
+
+        enemy_positions = new_enemy_positions
+
+        #death handling
+        if player_health == 0:
+            screen.blit(death_text, (400,350))
+            screen.blit(return_menu_text, (425,400))
+            player_sprite = new_dead
+            pressed_right = False
+            pressed_left = False
+            pressed_jump = False
+            pressed_defend = False
+            pressed_attack = False
+
+        # health validation
+        if player_health <= 0:
+            player_health = 0
 
         # player movement
         if pressed_right:
@@ -269,6 +336,7 @@ while True:
                 player_rect.x += x_velocity
                 player_sprite = animate_sprite(walk_list, 1)
 
+        #movement handling
         if pressed_left:
             if pressed_shift:
                 player_rect.x -= x_sprint_velocity
@@ -292,12 +360,23 @@ while True:
 
         if pressed_attack:
             player_sprite = animate_sprite(attack_list, 1)
+            attack_rect = attack_hitbox(player_rect, new_attack1)
+            hit_enemy_index = check_attack_collision(attack_rect, enemy_rects)
+
+            if hit_enemy_index != -1:
+                print("Enemy kill!")
+                kill_count += 1
+                del enemy_positions[hit_enemy_index]
+                del enemy_rects[hit_enemy_index]
 
         if not on_ground:
             y_velocity += 1
         player_rect.y += y_velocity
 
-        # collisions
+        if player_rect.left < 0:
+            player_rect.left = 0
+
+        # collision handling
         rect = pygame.Rect(player_rect.x - scroll[0], player_rect.y, 35, 80)
         on_ground, hit_left, hit_right = handle_collisions(rect, world)
 
@@ -311,9 +390,8 @@ while True:
             if on_ground:
                 y_velocity = 0
 
-        if player_rect.left < 0:
-            player_rect.left = 0
 
+        # update player on screen
         screen.blit(player_sprite, rect)
 
     elif game_state == "settings":
@@ -333,7 +411,3 @@ while True:
 
     pygame.display.update()
     timer.tick(60)
-
-
-
-
